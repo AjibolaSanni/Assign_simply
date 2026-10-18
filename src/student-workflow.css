@@ -37,6 +37,10 @@
 .lecturer-form label,.lecturer-grade-form label{display:grid;gap:7px;color:#594c63;font-size:.9rem;font-weight:600}
 .lecturer-form input:not([type=checkbox]):not([type=file]),.lecturer-form textarea,.lecturer-form select,.lecturer-grade-form input:not([type=checkbox]),.lecturer-grade-form textarea{width:100%;padding:11px 12px;border:1px solid #e6dce9;border-radius:11px;background:#fff;color:#30233a;font:inherit}
 .lecturer-form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.lecturer-form-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+.lecturer-form-grid>label{min-width:0}
+.lecturer-form-grid input,.lecturer-form-grid select{box-sizing:border-box;min-width:0;max-width:100%}
+.lecturer-form-grid input[type=datetime-local]{width:100%;min-height:43px}
 .lecturer-checkboxes{display:grid;gap:12px;border:1px solid #eee3f2;border-radius:12px;padding:14px}
 .lecturer-checkboxes label,.lecturer-publish-choice{display:flex!important;align-items:center;gap:8px;font-weight:500!important}
 .lecturer-extension-list{display:flex;flex-wrap:wrap;gap:12px}
@@ -49,6 +53,7 @@
 .lecturer-grade-details summary{cursor:pointer;font-weight:650;color:#69419a}
 .lecturer-grade-form{display:grid;gap:12px;padding-top:14px}
 @media(max-width:640px){.lecturer-assignment-row,.lecturer-submission-header{align-items:flex-start;flex-direction:column}.lecturer-row-actions{justify-content:flex-start}}
+@media(max-width:520px){.lecturer-form-grid{grid-template-columns:minmax(0,1fr)}}
 .admin-user-row,.admin-course-row,.admin-activity-row{display:flex;width:100%;align-items:center;justify-content:space-between;gap:16px}
 .admin-user-row>div:first-child,.admin-activity-row>div:first-child{display:grid;gap:5px}
 .admin-user-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}

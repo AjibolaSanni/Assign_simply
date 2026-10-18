@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import {
   Activity, ArrowDownToLine, ArrowRight, Bell, BookOpen, CalendarDays, CheckCheck,
-  ClipboardCheck, Download, FileText, GraduationCap, LayoutDashboard, LogOut, Search, Shield, Upload, Users, X,
+  ClipboardCheck, Download, FileText, GraduationCap, LayoutDashboard, LogOut, Menu, Search, Shield, Upload, Users, X,
 } from 'lucide-react'
 import Brand from '../components/Brand'
 import { useAuth } from '../contexts/AuthContext'
@@ -283,6 +283,7 @@ function exportCsv(name, rows, columns) {
 }
 
 function WorkspaceContent({ role, section, data, profile, user, onRead, onReadAll, onSignOut, onDownload, onSubmitted, actionError, onRetry }) {
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const firstName = profile.full_name?.split(' ')[0] || user.email?.split('@')[0] || 'there'
   const courses = data.courses ?? []
   const assignments = data.assignments ?? []
@@ -389,12 +390,12 @@ function WorkspaceContent({ role, section, data, profile, user, onRead, onReadAl
 
   return <main className={`workspace role-workspace role-${role}`}>
     <aside className="workspace-sidebar role-sidebar">
-      <Brand/>
+      <div className="role-sidebar-header"><Brand/><button className="role-menu-toggle" type="button" aria-label={mobileNavOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={mobileNavOpen} aria-controls="role-navigation" onClick={() => setMobileNavOpen(open => !open)}>{mobileNavOpen ? <X size={20}/> : <Menu size={20}/>}</button></div>
       <div className="role-sidebar-caption">{roleNames[role]} workspace</div>
-      <nav className="role-navigation" aria-label={`${roleNames[role]} navigation`}>
+      <nav id="role-navigation" className={`role-navigation ${mobileNavOpen ? 'is-open' : ''}`} aria-label={`${roleNames[role]} navigation`}>
         {menu.map(([key, label, Icon, disabled]) => disabled
           ? <button key={key} className="side-link role-nav-link unavailable" type="button" disabled title="Not available in this stage"><Icon size={18}/><span>{label}</span></button>
-          : <button key={key} className={`side-link role-nav-link ${section === key ? 'active' : ''}`} type="button" onClick={() => onRetry(key)} aria-current={section === key ? 'page' : undefined}><Icon size={18}/><span>{label}</span>{key === 'notifications' && unreadCount > 0 && <i className="role-unread-count">{unreadCount}</i>}</button>
+          : <button key={key} className={`side-link role-nav-link ${section === key ? 'active' : ''}`} type="button" onClick={() => { onRetry(key); setMobileNavOpen(false) }} aria-current={section === key ? 'page' : undefined}><Icon size={18}/><span>{label}</span>{key === 'notifications' && unreadCount > 0 && <i className="role-unread-count">{unreadCount}</i>}</button>
         )}
       </nav>
       <div className="side-bottom"><div className="profile-chip"><span className="avatar">{firstName[0]?.toUpperCase()}</span><span><b>{firstName}</b><small>{roleNames[role]}</small></span></div></div>

@@ -347,15 +347,16 @@ export async function submitStudentAssignment(userId, assignment, file) {
   const filePath = `${userId}/${assignment.id}/${crypto.randomUUID()}.${extension}`
   const storage = requireSupabase().storage.from('submission-files')
   const { error: uploadError } = await storage.upload(filePath, file, { contentType: expectedMime, upsert: false })
-  if (uploadError) throw uploadError
+  if (uploadError) throw new Error(`Storage upload failed: ${uploadError.message}`)
   const { data, error } = await requireSupabase().rpc('submit_assignment', {
     p_assignment_id: assignment.id,
     p_file_path: filePath,
     p_file_name: file.name,
   })
   if (error) {
-    await storage.remove([filePath])
-    throw error
+    const { error: cleanupError } = await storage.remove([filePath])
+    const cleanupMessage = cleanupError ? ` Temporary file cleanup failed: ${cleanupError.message}` : ''
+    throw new Error(`Submission record failed: ${error.message}${cleanupMessage}`)
   }
   return data
 }

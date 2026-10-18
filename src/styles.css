@@ -62,3 +62,35 @@
  .role-state .submit-button{min-width:145px;padding:0 18px}
 @media(max-width:1000px){.role-main{padding:0 27px 40px}.role-stats-grid,.role-administrator .role-stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:720px){.role-workspace{display:block}.role-sidebar{position:relative;display:flex;height:auto;min-height:0;gap:8px;padding:14px 17px 11px;border-right:0;border-bottom:1px solid #eee8f0}.role-sidebar .brand{margin:0 0 2px}.role-sidebar-caption,.role-sidebar .side-bottom{display:none}.role-navigation{flex-direction:row;overflow-x:auto;gap:5px;padding-bottom:3px}.role-nav-link{width:auto;min-width:max-content;justify-content:center;padding:9px 10px;font-size:10px}.role-nav-link span{flex:none}.role-nav-link svg{width:15px;height:15px}.role-nav-link.unavailable{font-size:9px}.role-main{padding:0 16px 32px}.role-top{height:58px}.role-welcome{margin:20px 0 14px;padding:21px 19px}.role-welcome h1,.role-page-heading h1{font-size:21px}.role-stats-grid,.role-administrator .role-stats-grid{gap:9px}.role-stat-card{min-height:107px;padding:13px}.role-stat-label{font-size:9px}.role-panel{padding:17px 15px}.role-record{align-items:flex-start}.role-record time{max-width:115px;text-align:right;line-height:1.5}.role-quick-actions{flex-direction:column}.role-quick-actions button{justify-content:flex-start}.role-schema-note{font-size:9px}}
+
+/* Responsive dashboard and content safeguards */
+.role-sidebar-header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.role-menu-toggle{display:none;align-items:center;justify-content:center;width:40px;height:40px;border:1px solid #eee7f0;border-radius:11px;background:#fff;color:#776e7c;cursor:pointer}
+.role-workspace,.role-sidebar,.role-main,.role-panel,.role-panel-content,.role-record,.role-notification-row,.lecturer-assignment-row,.lecturer-submission-header,.admin-user-row,.admin-course-row{min-width:0}
+.role-record>div,.role-notification-row>div,.lecturer-assignment-row>div,.lecturer-submission-header>div,.admin-user-row>div:first-child,.admin-course-row>div{min-width:0;overflow-wrap:anywhere}
+.role-panel button,.role-section-heading button,.role-top-actions button,.role-quick-actions button{min-height:40px}
+@media(max-width:980px){.auth-page{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.story-panel{padding:32px clamp(20px,4vw,38px) 28px}.form-panel{padding-left:clamp(20px,4vw,38px);padding-right:clamp(20px,4vw,38px)}.role-main{padding-left:24px;padding-right:24px}.role-workspace{grid-template-columns:220px minmax(0,1fr)}.role-stats-grid,.role-administrator .role-stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.student-filters{grid-template-columns:minmax(0,1fr) minmax(0,.7fr) minmax(0,.7fr)}}
+@media(max-width:720px){
+  html,body,#root{max-width:100%;overflow-x:clip}
+  .role-workspace{display:block;width:100%}
+  .role-sidebar{position:sticky;z-index:20;top:0;display:flex;height:auto;min-height:0;gap:8px;padding:10px 16px;background:rgba(255,255,255,.97);border-right:0;border-bottom:1px solid #eee8f0;box-shadow:0 5px 16px rgba(62,40,67,.04)}
+  .role-sidebar-header{width:100%}.role-sidebar-header .brand{margin:0;font-size:18px}.role-sidebar-header .brand-mark{width:35px;height:35px}
+  .role-menu-toggle{display:inline-flex;flex:none}.role-sidebar-caption,.role-sidebar .side-bottom{display:none}
+  .role-navigation{display:none;flex-direction:column;max-height:min(65vh,480px);overflow-y:auto;overflow-x:hidden;width:100%;padding:5px 0 4px}
+  .role-navigation.is-open{display:flex}.role-nav-link{width:100%;min-width:0;justify-content:flex-start;padding:11px 12px;font-size:12px}.role-nav-link span{flex:1}.role-nav-link svg{width:18px;height:18px}
+  .role-main{width:100%;padding:0 16px 30px}.role-top{height:56px;gap:8px;font-size:10px}.role-signout{min-height:38px!important;padding:8px 10px!important}
+  .role-welcome{margin:17px 0 13px;padding:19px 17px}.role-welcome h1,.role-page-heading h1{font-size:clamp(19px,5vw,22px);overflow-wrap:anywhere}.role-welcome>p:last-child{max-width:90%;line-height:1.55}
+  .role-stats-grid,.role-administrator .role-stats-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.role-stat-card{min-width:0;min-height:100px;padding:12px}.role-stat-card strong{font-size:22px}.role-stat-label{font-size:9px;overflow-wrap:anywhere}
+  .role-panel{padding:15px 13px;border-radius:14px}.role-panel-content{gap:16px}.role-section-heading{align-items:flex-start;flex-wrap:wrap}.role-section-heading h2{font-size:15px}.role-section-heading>*{max-width:100%}
+  .role-record,.role-notification-row{align-items:flex-start;flex-direction:column;gap:7px}.role-record time,.role-record>span{max-width:100%;text-align:left}.role-record>div{width:100%}.role-record small{white-space:normal;overflow-wrap:anywhere}.role-notification-actions{justify-content:flex-start;width:100%}
+  .role-quick-actions{flex-direction:column}.role-quick-actions button{width:100%;min-height:44px;justify-content:flex-start}
+  .role-section-heading .student-submit-button,.role-panel .student-submit-button{max-width:100%;white-space:normal}
+}
+@media(max-width:520px){
+  .role-main{padding-left:12px;padding-right:12px}.role-stats-grid,.role-administrator .role-stats-grid{grid-template-columns:minmax(0,1fr)}.role-stat-card{min-height:88px}
+  .student-filters{grid-template-columns:minmax(0,1fr)}.student-search{grid-column:auto}.student-upload-form{width:100%}.student-file-picker,.student-upload-form>.student-submit-button{width:100%;flex:1 1 100%;min-height:42px;justify-content:center}.student-file-picker span{max-width:min(65vw,260px)}
+  .lecturer-form,.lecturer-submission-card{padding:15px;margin:12px 0}.lecturer-form-grid{grid-template-columns:minmax(0,1fr)}.lecturer-checkboxes{padding:11px}.lecturer-extension-list{gap:8px}.lecturer-form-actions{justify-content:flex-start}.lecturer-form-actions>*{flex:1 1 auto;min-height:42px}
+  .lecturer-assignment-row,.lecturer-submission-header,.admin-user-row,.admin-course-row{align-items:stretch;flex-direction:column}.lecturer-row-actions,.admin-user-actions{width:100%;justify-content:flex-start;flex-wrap:wrap}.lecturer-row-actions button,.admin-user-actions button{overflow-wrap:anywhere}.admin-user-actions select{max-width:100%}.admin-reports button{width:100%;justify-content:center;min-height:42px}.student-file-row{align-items:flex-start;flex-wrap:wrap}.student-file-row>span{min-width:0;overflow-wrap:anywhere}.student-history-row{flex-direction:column;align-items:flex-start}
+  .role-page-heading{margin:22px 0 14px}.role-top-actions{gap:7px}.role-top-actions .role-signout{font-size:10px}
+}
+@media(max-width:360px){.role-main{padding-left:10px;padding-right:10px}.role-top{font-size:9px}.role-panel{padding:12px 10px}.role-stats-grid{gap:7px}.role-menu-toggle{width:38px;height:38px}}
