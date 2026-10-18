@@ -421,23 +421,26 @@ export default function RoleDashboard() {
   const [section, setSection] = useState('overview')
   const [actionError, setActionError] = useState('')
 
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async ({ silent = false } = {}) => {
     if (!user) return
-    setLoading(true)
-    setError('')
+    if (!silent) {
+      setLoading(true)
+      setError('')
+    }
     try {
       setResult(await loadRoleDashboard(user.id))
     } catch (cause) {
-      setError(dashboardError(cause))
+      if (silent) setActionError(dashboardError(cause))
+      else setError(dashboardError(cause))
     } finally {
-      setLoading(false)
+      if (!silent) setLoading(false)
     }
   }, [user])
 
   useEffect(() => { refresh() }, [refresh])
   useEffect(() => {
     const refreshWhenVisible = () => {
-      if (!document.hidden) refresh()
+      if (!document.hidden) refresh({ silent: true })
     }
     document.addEventListener('visibilitychange', refreshWhenVisible)
     return () => document.removeEventListener('visibilitychange', refreshWhenVisible)
