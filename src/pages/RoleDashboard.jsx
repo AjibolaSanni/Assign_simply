@@ -434,6 +434,13 @@ export default function RoleDashboard() {
   }, [user])
 
   useEffect(() => { refresh() }, [refresh])
+  useEffect(() => {
+    const refreshWhenVisible = () => {
+      if (!document.hidden) refresh()
+    }
+    document.addEventListener('visibilitychange', refreshWhenVisible)
+    return () => document.removeEventListener('visibilitychange', refreshWhenVisible)
+  }, [refresh])
   const navigateSection = useCallback(key => { setSection(key); setActionError('') }, [])
 
   const readOne = async id => {
