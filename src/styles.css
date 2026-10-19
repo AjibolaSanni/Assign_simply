@@ -94,3 +94,13 @@
   .role-page-heading{margin:22px 0 14px}.role-top-actions{gap:7px}.role-top-actions .role-signout{font-size:10px}
 }
 @media(max-width:360px){.role-main{padding-left:10px;padding-right:10px}.role-top{font-size:9px}.role-panel{padding:12px 10px}.role-stats-grid{gap:7px}.role-menu-toggle{width:38px;height:38px}}
+
+/* Mobile auth layout: retain the existing visual styles and rearrange only the content. */
+@media(max-width:720px){
+  .form-panel{align-items:center;justify-content:center}
+  .form-shell{width:100%;max-width:440px;margin:0 auto}
+  .mobile-brand{display:flex;justify-content:center}
+  .form-heading{text-align:center}
+  .auth-form{width:100%}
+  .form-options{flex-wrap:wrap;gap:10px}
+}

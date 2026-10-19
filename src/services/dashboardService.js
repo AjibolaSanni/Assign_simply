@@ -5,6 +5,19 @@ function unwrap(result) {
   return result
 }
 
+function createUploadId() {
+  if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID()
+  const bytes = new Uint8Array(16)
+  globalThis.crypto.getRandomValues(bytes)
+  bytes[6] = (bytes[6] & 0x0f) | 0x40
+  bytes[8] = (bytes[8] & 0x3f) | 0x80
+  return [...bytes].map((byte, index) => `${[4, 6, 8, 10].includes(index) ? '-' : ''}${byte.toString(16).padStart(2, '0')}`).join('')
+}
+
+function hasConflictingMime(file, expectedMime) {
+  return Boolean(file.type && file.type !== 'application/octet-stream' && file.type !== expectedMime)
+}
+
 async function fetchAllRows(query) {
   const pageSize = 1000
   const rows = []
@@ -158,8 +171,8 @@ export async function saveLecturerAssignment(assignment, userId) {
     const extension = file.name.split('.').pop()?.toLowerCase()
     if (!extension || !MIME_BY_EXTENSION[extension]) throw new Error('Attachments must be PDF, DOC, DOCX, PPT, PPTX, XLS, or XLSX files.')
     if (file.size > 52428800) throw new Error('Each attachment must be 50 MB or smaller.')
-    if (file.type && file.type !== MIME_BY_EXTENSION[extension]) throw new Error('An attachment content type does not match its extension.')
-    const path = `${id}/${crypto.randomUUID()}.${extension}`
+    if (hasConflictingMime(file, MIME_BY_EXTENSION[extension])) throw new Error('An attachment content type does not match its extension.')
+    const path = `${id}/${createUploadId()}.${extension}`
     const storage = client.storage.from('assignment-files')
     const { error: uploadError } = await storage.upload(path, file, { contentType: MIME_BY_EXTENSION[extension], upsert: false })
     if (uploadError) throw uploadError
@@ -343,8 +356,8 @@ export async function submitStudentAssignment(userId, assignment, file) {
   if (!(assignment.allowed_file_extensions ?? []).includes(extension)) throw new Error('This file type is not allowed for the assignment.')
   if (file.size > assignment.max_submission_file_size) throw new Error('The selected file exceeds the assignment size limit.')
   const expectedMime = MIME_BY_EXTENSION[extension]
-  if (file.type && file.type !== expectedMime) throw new Error('The file content type does not match its extension.')
-  const filePath = `${userId}/${assignment.id}/${crypto.randomUUID()}.${extension}`
+  if (hasConflictingMime(file, expectedMime)) throw new Error('The file content type does not match its extension.')
+  const filePath = `${userId}/${assignment.id}/${createUploadId()}.${extension}`
   const storage = requireSupabase().storage.from('submission-files')
   const { error: uploadError } = await storage.upload(filePath, file, { contentType: expectedMime, upsert: false })
   if (uploadError) throw new Error(`Storage upload failed: ${uploadError.message}`)

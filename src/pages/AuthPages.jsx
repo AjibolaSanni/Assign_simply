@@ -63,8 +63,8 @@ export default function AuthPage({ mode }) {
       <div className="story-footer"><span className="footer-line"/><span>Simplifying assignments. Empowering learning.</span><span className="footer-index">01 <i/> 03</span></div>
     </section>
     <section className="form-panel">
-      <div className="mobile-brand"><Brand /></div>
       <div className="form-shell">
+        <div className="mobile-brand"><Brand /></div>
         <div className="form-heading"><div className="form-mark"><LockKeyhole size={20}/></div><p className="eyebrow">{mode === 'login' ? 'WELCOME BACK' : mode === 'register' ? 'CREATE YOUR ACCOUNT' : 'SECURE YOUR ACCOUNT'}</p><h2>{mode === 'login' ? 'Sign in to AssignSimply' : mode === 'register' ? 'Create your account' : mode === 'forgot' ? 'Forgot your password?' : 'Set a new password'}</h2><p className="form-subtitle">{mode === 'login' ? 'Enter your details to continue to your workspace.' : mode === 'register' ? 'Join your academic community in just a moment.' : mode === 'forgot' ? 'Enter your email and we’ll send you a reset link.' : 'Use at least 8 characters for your new password.'}</p></div>
         {!configured && <div className="notice" role="status"><strong>Supabase setup needed</strong><span>Add your project URL and publishable key to <code>.env</code> to enable account access.</span></div>}
         <form className="auth-form" onSubmit={submit}>
