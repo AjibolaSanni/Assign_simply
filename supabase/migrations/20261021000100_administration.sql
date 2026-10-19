@@ -13,6 +13,7 @@ create index if not exists activity_logs_actor_idx on public.activity_logs(actor
 alter table public.activity_logs enable row level security;
 revoke all on public.activity_logs from anon,authenticated;
 grant select on public.activity_logs to authenticated;
+drop policy if exists "administrators read activity logs" on public.activity_logs;
 create policy "administrators read activity logs" on public.activity_logs
 for select to authenticated using (public.current_app_role()='administrator');
 

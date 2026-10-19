@@ -52,6 +52,7 @@ grant select on public.assignment_attachments,public.submission_versions to auth
 grant insert,update,delete on public.assignment_attachments to authenticated;
 
 drop policy if exists "assignment member read" on public.assignments;
+drop policy if exists "published assignments visible to course members" on public.assignments;
 create policy "published assignments visible to course members" on public.assignments for select to authenticated
 using (
   public.current_app_role()='administrator'
@@ -69,6 +70,7 @@ drop policy if exists "lecturer admin deletes assignments" on public.assignments
 create policy "lecturer admin deletes assignments" on public.assignments for delete to authenticated
 using (public.is_course_lecturer(course_id) or public.current_app_role()='administrator');
 
+drop policy if exists "attachments visible to assignment members" on public.assignment_attachments;
 create policy "attachments visible to assignment members" on public.assignment_attachments for select to authenticated
 using (
   public.current_app_role()='administrator'
@@ -76,6 +78,7 @@ using (
   or exists(select 1 from public.assignments a join public.enrolments e on e.course_id=a.course_id
     where a.id=assignment_attachments.assignment_id and a.status='published' and e.student_id=(select auth.uid()))
 );
+drop policy if exists "lecturer manages assignment attachments" on public.assignment_attachments;
 create policy "lecturer manages assignment attachments" on public.assignment_attachments for all to authenticated
 using (public.is_assignment_lecturer(assignment_id) or public.current_app_role()='administrator')
 with check (
@@ -84,6 +87,7 @@ with check (
   and exists(select 1 from public.assignments a where a.id=assignment_id)
 );
 
+drop policy if exists "submission version owner lecturer admin read" on public.submission_versions;
 create policy "submission version owner lecturer admin read" on public.submission_versions for select to authenticated
 using (
   public.current_app_role()='administrator'
@@ -203,6 +207,7 @@ values('assignment-files','assignment-files',false,52428800,array[
 ]) on conflict(id) do update set public=false,file_size_limit=excluded.file_size_limit,allowed_mime_types=excluded.allowed_mime_types;
 
 drop policy if exists "student uploads own enrolled file" on storage.objects;
+drop policy if exists "student uploads own assignment submission" on storage.objects;
 create policy "student uploads own assignment submission" on storage.objects for insert to authenticated
 with check (
   bucket_id='submission-files'
@@ -227,14 +232,17 @@ using (bucket_id='submission-files' and (
 ));
 drop policy if exists "student updates own file" on storage.objects;
 drop policy if exists "owner lecturer admin deletes submission file" on storage.objects;
+drop policy if exists "lecturer admin deletes submission file" on storage.objects;
 create policy "lecturer admin deletes submission file" on storage.objects for delete to authenticated
 using (bucket_id='submission-files' and (
   public.current_app_role()='administrator'
   or public.is_assignment_lecturer(((storage.foldername(name))[2])::uuid)
 ));
 
+drop policy if exists "lecturer uploads assignment file" on storage.objects;
 create policy "lecturer uploads assignment file" on storage.objects for insert to authenticated
 with check (bucket_id='assignment-files' and public.is_assignment_lecturer(((storage.foldername(name))[1])::uuid));
+drop policy if exists "course members read published assignment files" on storage.objects;
 create policy "course members read published assignment files" on storage.objects for select to authenticated
 using (
   bucket_id='assignment-files' and (
@@ -244,8 +252,10 @@ using (
       where a.id=((storage.foldername(name))[1])::uuid and a.status='published' and e.student_id=(select auth.uid()))
   )
 );
+drop policy if exists "lecturer admin deletes assignment file" on storage.objects;
 create policy "lecturer admin deletes assignment file" on storage.objects for delete to authenticated
 using (bucket_id='assignment-files' and (public.current_app_role()='administrator' or public.is_assignment_lecturer(((storage.foldername(name))[1])::uuid)));
+drop policy if exists "student deletes uncommitted submission file" on storage.objects;
 create policy "student deletes uncommitted submission file" on storage.objects for delete to authenticated
 using (bucket_id='submission-files' and (storage.foldername(name))[1]=(select auth.uid())::text
   and not exists(select 1 from public.submission_versions v where v.file_path=storage.objects.name)
